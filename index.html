@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ESP32-CAM Auto-Capture</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; background: #181818; color: #EFEFEF; font-size: 16px }
+    h2 { font-size: 18px; text-align: center; }
+    #status { text-align: center; font-size: 0.9rem; margin-bottom: 1rem; }
+    #last-capture-container { text-align: center; padding: 10px; }
+    #last-capture { width:100%; max-width:600px; border: 2px solid #007bff; margin: 0 auto; min-height: 240px; background-color: #333;}
+  </style>
+</head>
+
+<body>
+  
+  <h2>ESP32 Stall Monitor</h2>
+  <div id="status">Connecting to camera...</div>
+
+  <div id="last-capture-container">
+    <img id="last-capture" src="">
+  </div>
+  
+  <script>
+    const statusEl = document.getElementById('status');
+    const lastCaptureEl = document.getElementById('last-capture');
+
+    // This is the main function that captures and uploads the image.
+    async function captureAndUpload() {
+      statusEl.textContent = 'Capturing new image...';
+      try {
+        // 1. Fetch the image from the ESP32-CAM's /capture endpoint.
+        const response = await fetch('/capture');
+        if (!response.ok) {
+          throw new Error(`Camera error: ${response.status}`);
+        }
+        const imageBlob = await response.blob(); // Get the image data as a Blob
+        
+        // Display the captured image on the page
+        lastCaptureEl.src = URL.createObjectURL(imageBlob);
+        console.log('Image captured from ESP32-CAM.');
+
+        // 2. Prepare the image data for upload.
+        const formData = new FormData();
+        const fileName = `capture_${new Date().toISOString()}.jpg`;
+        formData.append('image', imageBlob, fileName);
+
+        // 3. Send the image to your storage server.
+        //    IMPORTANT: You MUST replace this URL with your own server's address.
+// ✅ Replace with your computer's actual IP address from the terminal
+        const uploadUrl = 'http://10.223.192.45:5001/upload';
+        statusEl.textContent = `Uploading image to ${uploadUrl}...`;
+        
+        const uploadResponse = await fetch(uploadUrl, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (uploadResponse.ok) {
+          const result = await uploadResponse.text();
+          console.log('Upload successful:', result);
+          statusEl.textContent = 'Upload successful! Waiting for next capture...';
+        } else {
+          throw new Error(`Upload failed: ${uploadResponse.statusText}`);
+        }
+
+      } catch (error) {
+        console.error('An error occurred:', error);
+        statusEl.textContent = `Error: ${error.message}. Retrying...`;
+      }
+    }
+
+    // 4. Run the function every 2000 milliseconds (2 seconds).
+    setInterval(captureAndUpload, 2000);
+  </script>
+</body>
+</html>
