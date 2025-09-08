@@ -1,0 +1,53 @@
+{
+  "name": "CrowdReading",
+  "type": "object",
+  "properties": {
+    "people_count": {
+      "type": "number",
+      "description": "Number of people detected in the image"
+    },
+    "confidence_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "AI confidence in the detection"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "URL of the processed image"
+    },
+    "location": {
+      "type": "string",
+      "enum": [
+        "main_entrance",
+        "food_court",
+        "exhibition_hall",
+        "parking_area",
+        "emergency_exit"
+      ],
+      "default": "main_entrance",
+      "description": "Location where the reading was taken"
+    },
+    "alert_triggered": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this reading triggered an overcrowding alert"
+    },
+    "temperature": {
+      "type": "number",
+      "description": "Environmental temperature at time of reading"
+    },
+    "humidity": {
+      "type": "number",
+      "description": "Environmental humidity at time of reading"
+    },
+    "device_id": {
+      "type": "string",
+      "description": "ESP32-CAM device identifier"
+    }
+  },
+  "required": [
+    "people_count",
+    "location"
+  ]
+}
