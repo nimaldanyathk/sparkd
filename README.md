@@ -11,10 +11,9 @@
 - Rechargeable Battery  
 
 ## Screenshot  
-![App Screenshot](assets/screenshot.png)  
+![App Screenshot](screenshot.png)  
 
-## Circuit Diagram  
-![Circuit Diagram](assets/circuit-diagram.png)  
+
 
 ---------------------------------------------------------------------
 
