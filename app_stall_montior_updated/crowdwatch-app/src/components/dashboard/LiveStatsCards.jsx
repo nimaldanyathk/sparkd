@@ -1,129 +1,143 @@
-import React from "react";
-import { Card, CardContent } from "../ui/card";
-import { Badge } from "../ui/badge";
-import { 
-  Users, 
-  AlertTriangle, 
-  TrendingUp, 
-  Activity,
-  MapPin
-} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { TrendingUp } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 
-export default function LiveStatsCards({ stats, alerts, isLoading }) {
-  const getOverallStatus = () => {
-    const statuses = Object.values(stats.locations).map(loc => loc.status);
-    if (statuses.includes('critical')) return 'critical';
-    if (statuses.includes('warning')) return 'warning';
-    return 'normal';
+// CSV Helpers
+async function fetchCsvText() {
+  const res = await fetch("/counts.csv");
+  if (!res.ok) throw new Error("Failed to fetch counts.csv: " + res.status);
+  return await res.text();
+}
+
+function parseCsvRows(text) {
+  const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const rows = [];
+
+  for (const line of lines) {
+    const parts = line.split(",");
+    if (parts.length < 3) continue;
+
+    const image = parts[0].trim();
+    let ts = parts[1].trim();
+    const countStr = parts[2].trim();
+
+    if (!countStr) continue; // must have count
+
+    if (ts) {
+      try {
+        ts = new Date(ts).toISOString();
+      } catch {
+        ts = null;
+      }
+    }
+
+    const count = Number(countStr);
+    if (Number.isFinite(count)) {
+      rows.push({ image, time: ts || new Date().toISOString(), count });
+    }
+  }
+
+  return rows;
+}
+
+export default function RealTimeChart({ isLoading }) {
+  const [csvData, setCsvData] = useState([]);
+  const [loadingCsv, setLoadingCsv] = useState(true);
+
+  useEffect(() => {
+    loadCsv();
+    const interval = setInterval(loadCsv, 30000); // auto-refresh
+    return () => clearInterval(interval);
+  }, []);
+
+  const loadCsv = async () => {
+    try {
+      const csvText = await fetchCsvText();
+      const rows = parseCsvRows(csvText);
+
+      // Map rows into chart-ready format
+      const chartData = rows.map(r => ({
+        time: new Date(r.time), // keep raw Date object
+        people: r.count,
+      }));
+
+      setCsvData(chartData);
+    } catch (e) {
+      console.error("CSV load error:", e);
+      setCsvData([]);
+    } finally {
+      setLoadingCsv(false);
+    }
   };
 
-  const statusColors = {
-    normal: "bg-green-500",
-    warning: "bg-yellow-500", 
-    critical: "bg-red-500"
-  };
-
-  const overallStatus = getOverallStatus();
-
-  if (isLoading) {
+  if (isLoading || loadingCsv) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {Array(4).fill(0).map((_, i) => (
-          <Card key={i} className="bg-white/80 backdrop-blur-sm border-slate-200/60">
-            <CardContent className="p-6">
-              <Skeleton className="h-20 w-full" />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <Card className="bg-white/80 backdrop-blur-sm border-slate-200/60">
+        <CardHeader>
+          <CardTitle>Crowd Trends</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-64 w-full" />
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      {/* Total People */}
-      <Card className="bg-white/80 backdrop-blur-sm border-slate-200/60 hover:shadow-lg transition-all duration-300">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-500 mb-1">Total People</p>
-              <p className="text-3xl font-bold text-slate-900">{stats.total}</p>
-              <div className="flex items-center gap-2 mt-2">
-                <div className={`w-2 h-2 rounded-full ${statusColors[overallStatus]} animate-pulse`}></div>
-                <span className="text-xs text-slate-500 capitalize">{overallStatus} levels</span>
-              </div>
-            </div>
-            <div className={`p-3 rounded-xl bg-blue-500 bg-opacity-20`}>
-              <Users className="w-6 h-6 text-blue-600" />
+    <Card className="bg-white/80 backdrop-blur-sm border-slate-200/60">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <TrendingUp className="w-5 h-5 text-blue-600" />
+          Real-time Crowd Trends
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        {csvData.length === 0 ? (
+          <div className="h-64 flex items-center justify-center">
+            <div className="text-center">
+              <TrendingUp className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+              <p className="text-slate-500">No CSV data available</p>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        ) : (
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={csvData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+<XAxis
+  dataKey="time"
+  stroke="#64748b"
+  tick={{ fontSize: 12 }}
+  tickFormatter={(time) => 
+    new Date(time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+  }
+/>
 
-      {/* Active Locations */}
-      <Card className="bg-white/80 backdrop-blur-sm border-slate-200/60 hover:shadow-lg transition-all duration-300">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-500 mb-1">Active Locations</p>
-              <p className="text-3xl font-bold text-slate-900">{Object.keys(stats.locations).length}</p>
-              <div className="flex items-center gap-2 mt-2">
-                <Activity className="w-3 h-3 text-green-500" />
-                <span className="text-xs text-slate-500">All systems operational</span>
-              </div>
-            </div>
-            <div className="p-3 rounded-xl bg-purple-500 bg-opacity-20">
-              <MapPin className="w-6 h-6 text-purple-600" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Recent Alerts */}
-      <Card className="bg-white/80 backdrop-blur-sm border-slate-200/60 hover:shadow-lg transition-all duration-300">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-500 mb-1">Recent Alerts</p>
-              <p className="text-3xl font-bold text-slate-900">{alerts.length}</p>
-              <div className="flex items-center gap-2 mt-2">
-                {alerts.length > 0 ? (
-                  <Badge variant="outline" className="text-xs bg-yellow-50 text-yellow-700 border-yellow-200">
-                    Last hour
-                  </Badge>
-                ) : (
-                  <span className="text-xs text-slate-500">No recent alerts</span>
-                )}
-              </div>
-            </div>
-            <div className="p-3 rounded-xl bg-yellow-500 bg-opacity-20">
-              <AlertTriangle className="w-6 h-6 text-yellow-600" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Peak Detection */}
-      <Card className="bg-white/80 backdrop-blur-sm border-slate-200/60 hover:shadow-lg transition-all duration-300">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-500 mb-1">Peak Capacity</p>
-              <p className="text-3xl font-bold text-slate-900">
-                {Math.max(...Object.values(stats.locations).map(l => l.current)) || 0}
-              </p>
-              <div className="flex items-center gap-2 mt-2">
-                <TrendingUp className="w-3 h-3 text-green-500" />
-                <span className="text-xs text-slate-500">Highest location</span>
-              </div>
-            </div>
-            <div className="p-3 rounded-xl bg-green-500 bg-opacity-20">
-              <TrendingUp className="w-6 h-6 text-green-600" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+<Tooltip
+  labelFormatter={(time) =>
+    new Date(time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })
+  }
+  formatter={(value) => [`${value} people`, "Count"]}
+  contentStyle={{
+    backgroundColor: "white",
+    border: "1px solid #e2e8f0",
+    borderRadius: "8px",
+  }}
+/>
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="people"
+                stroke="#3B82F6"
+                strokeWidth={2}
+                dot={{ fill: "#3B82F6", strokeWidth: 2 }}
+                name="People Count"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
+      </CardContent>
+    </Card>
   );
 }
