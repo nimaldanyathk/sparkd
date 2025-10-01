@@ -1,7 +1,7 @@
 # Crowd Watch Pro  
 
 ## Deployment & Resources  
-- **Mobile App / Website (Deployed Link):** [Crowd Watch Pro](https://crowd-watch-pro-ab712e12.base44.app)  
+- **Mobile App / Website (Deployed Link):** [Crowd Watch Pro](https://sparkd.base44.app)  
 - **Jupyter Notebook (Google Colab Link):** [Notebook Link](https://colab.research.google.com/drive/1wFi053jWkcXHRLWTJ1rutAhd1XuSc6Xm?usp=sharing)  
 
 ## Hardware Used  
