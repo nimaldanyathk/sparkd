@@ -1,3 +1,25 @@
+# Crowd Watch Pro  
+
+## Deployment & Resources  
+- **Mobile App / Website (Deployed Link):** [Crowd Watch Pro](https://sparkd.base44.app)  
+- **Jupyter Notebook (Google Colab Link):** [Notebook Link](https://colab.research.google.com/drive/1wFi053jWkcXHRLWTJ1rutAhd1XuSc6Xm?usp=sharing)  
+
+## Hardware Used  
+- ESP32-CAM  
+- Charging Module  
+- Micro USB Cable  
+- Rechargeable Battery  
+
+## Screenshot  
+![App Screenshot](screenshot.png)  
+
+
+
+---------------------------------------------------------------------
+
+
+
+
 # ESP32-CAM Auto-Capture & Upload for Stall Monitoring
 
 ![8-bit retro style pixel art of a horse in a stall](retro.jpg)
@@ -18,7 +40,6 @@ The system consists of two main components that must be on the **same Wi-Fi netw
 1.  **The ESP32-CAM:** This device serves a webpage and acts as a client. The JavaScript on its webpage commands it to capture an image and then sends that image to the Python server's IP address.
 2.  **The Python Server:** This application runs on a computer (e.g., a Mac, Windows PC, or Raspberry Pi). It listens for incoming image data at an `/upload` endpoint and saves the files to a local `uploads` folder.
 
-![8-bit retro style pixel art of a security camera](images/security-camera.png)
 
 ---
 ## Requirements
