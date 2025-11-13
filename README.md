@@ -22,8 +22,6 @@
 
 # ESP32-CAM Auto-Capture & Upload for Stall Monitoring
 
-![8-bit retro style pixel art of a horse in a stall](retro.jpg)
-
 This project turns an ESP32-CAM into an automated monitoring camera. It captures an image at a set interval and uploads it via Wi-Fi to a Python Flask server, which saves the image to a local directory. It's a great starting point for projects like remote stall monitoring, security cameras, or time-lapse photography.
 
 ---
@@ -44,11 +42,6 @@ The system consists of two main components that must be on the **same Wi-Fi netw
 ---
 ## Requirements
 
-### Hardware
-* ESP32-CAM board (e.g., AI-Thinker model)
-* FTDI programmer (or any USB-to-Serial adapter) to upload the code
-* Jumper wires
-* A computer to run the Python server
 
 ### Software
 * [Arduino IDE](https://www.arduino.cc/en/software)
