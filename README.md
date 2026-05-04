@@ -6,6 +6,26 @@ The project came out of a need to monitor footfall at stalls and public spaces w
 
 ---
 
+## Screenshots
+
+**Dashboard**
+
+![Dashboard](screenshots/dashboard.png)
+
+**Analytics**
+
+![Analytics](screenshots/analytics.png)
+
+**Process Image**
+
+![Process Image](screenshots/upload.png)
+
+**Settings**
+
+![Settings](screenshots/settings.png)
+
+---
+
 ## How it works
 
 The ESP32-CAM captures an image every few seconds and uploads it over Wi-Fi to a Flask server running on your computer. A separate Python script (`Crowdcontrol.py`) watches the upload folder and runs YOLOv8 inference on each new image. The count gets written to a CSV file, along with a heatmap visualization. The React dashboard reads from that same server to display everything in real time.
