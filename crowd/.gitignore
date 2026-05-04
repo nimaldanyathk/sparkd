@@ -1,0 +1,12 @@
+venv310/
+__pycache__/
+*.pt
+*.mp4
+filesupdated/
+filesupdated1/
+shots/
+uploads/
+vis/
+vis1/
+visnew/
+yolov12/

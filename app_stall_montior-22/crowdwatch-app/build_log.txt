@@ -1,0 +1,90 @@
+
+> crowdwatch-app@0.1.0 build
+> react-scripts build
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+(node:19226) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Creating an optimized production build...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+Compiled with warnings.
+
+[eslint] 
+src/Layout.js
+  Line 10:3:  'Users' is defined but never used          no-unused-vars
+  Line 12:3:  'AlertTriangle' is defined but never used  no-unused-vars
+
+src/components/analytics/AnalyticsCards.jsx
+  Line 2:29:  'CardHeader' is defined but never used  no-unused-vars
+  Line 2:41:  'CardTitle' is defined but never used   no-unused-vars
+
+src/components/analytics/PeakHoursChart.jsx
+  Line 5:10:  'format' is defined but never used  no-unused-vars
+
+src/components/dashboard/LiveStatsCards.jsx
+  Line 8:10:  'peakLocation' is assigned a value but never used  no-unused-vars
+
+src/components/dashboard/LocationCards.jsx
+  Line 6:3:   'Users' is defined but never used                           no-unused-vars
+  Line 49:9:  'getStatusColor' is assigned a value but never used         no-unused-vars
+  Line 65:9:  'getCapacityPercentage' is assigned a value but never used  no-unused-vars
+
+src/components/dashboard/QuickActions.jsx
+  Line 9:3:  'Download' is defined but never used  no-unused-vars
+
+src/components/ui/sidebar.jsx
+  Line 1:25:  'useContext' is defined but never used  no-unused-vars
+
+src/pages/Analytics.jsx
+  Line 3:10:   'CrowdReading' is defined but never used  no-unused-vars
+  Line 9:3:    'BarChart' is defined but never used      no-unused-vars
+  Line 10:3:   'Bar' is defined but never used           no-unused-vars
+  Line 27:3:   'Users' is defined but never used         no-unused-vars
+  Line 29:3:   'Calendar' is defined but never used      no-unused-vars
+  Line 30:3:   'MapPin' is defined but never used        no-unused-vars
+  Line 32:30:  'endOfDay' is defined but never used      no-unused-vars
+  Line 32:49:  'subWeeks' is defined but never used      no-unused-vars
+
+src/pages/Dashboard.jsx
+  Line 3:10:  'SendEmail' is defined but never used                                                                        no-unused-vars
+  Line 6:10:  'Button' is defined but never used                                                                           no-unused-vars
+  Line 8:3:   'Users' is defined but never used                                                                            no-unused-vars
+  Line 9:3:   'AlertTriangle' is defined but never used                                                                    no-unused-vars
+  Line 10:3:  'TrendingUp' is defined but never used                                                                       no-unused-vars
+  Line 12:3:  'MapPin' is defined but never used                                                                           no-unused-vars
+  Line 13:3:  'ThermometerSun' is defined but never used                                                                   no-unused-vars
+  Line 14:3:  'Droplets' is defined but never used                                                                         no-unused-vars
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/Upload.jsx
+  Line 2:10:  'CrowdReading' is defined but never used   no-unused-vars
+  Line 2:24:  'AlertSettings' is defined but never used  no-unused-vars
+  Line 3:10:  'UploadFile' is defined but never used     no-unused-vars
+  Line 3:22:  'InvokeLLM' is defined but never used      no-unused-vars
+  Line 3:33:  'SendEmail' is defined but never used      no-unused-vars
+  Line 6:10:  'Input' is defined but never used          no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+File sizes after gzip:
+
+  412.19 kB (+1 B)  build/static/js/main.594d6d0b.js
+  43.14 kB          build/static/js/455.dc86009d.chunk.js
+  8.64 kB           build/static/js/977.555b6447.chunk.js
+  6.14 kB           build/static/css/main.a543e34d.css
+  1.78 kB           build/static/js/453.5dc9e1da.chunk.js
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://cra.link/deployment
+

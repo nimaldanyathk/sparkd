@@ -1,0 +1,14 @@
+.DS_Store
+node_modules/
+build/
+*.log
+__pycache__/
+*.pyc
+*.pyo
+.env
+.env.local
+.env.production
+*.h5
+*.pth
+*.pt
+.ipynb_checkpoints/
